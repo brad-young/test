@@ -66,15 +66,18 @@ def parse_flight_data(data_input, is_html_input: true)
   flights
 end
 
-def filter_florida_flights_rb(parsed_flights)
+# Renamed from filter_florida_flights_rb
+def filter_flights_by_state_rb(parsed_flights, target_state)
   parsed_flights.select do |flight|
-    flight['destination']&.end_with?(", FL")
+    flight['destination']&.end_with?(", #{target_state}") # Use target_state
   end
 end
 
-def aggregate_flight_data_rb(florida_flights)
+# Renamed from aggregate_flight_data_rb (no logic change, just consistency if we thought of it)
+# Actually, no need to rename this one, its input name 'florida_flights' can be generic 'state_specific_flights'
+def aggregate_flight_data_rb(state_specific_flights) # Parameter name changed for clarity
   aggregated_data = Hash.new { |h, k| h[k] = Hash.new(0) }
-  florida_flights.each do |flight|
+  state_specific_flights.each do |flight| # Iterate over the filtered flights
     destination_city = flight['destination']
     flight_status = flight['status']
     aggregated_data[destination_city][flight_status] += 1
@@ -82,10 +85,12 @@ def aggregate_flight_data_rb(florida_flights)
   aggregated_data
 end
 
-def format_flight_summary_rb(aggregated_data)
+# Modified to accept target_state for dynamic title
+def format_flight_summary_rb(aggregated_data, target_state) 
   return nil if aggregated_data.nil? || aggregated_data.empty?
   
-  output_lines = ["Florida Flight Status Summary:", "------------------------------"]
+  # Use target_state in the title
+  output_lines = ["#{target_state} Flight Status Summary:", "------------------------------"]
   aggregated_data.sort.to_h.each do |city, statuses|
     status_parts = []
     statuses.sort.to_h.each do |status, count|
@@ -98,7 +103,7 @@ def format_flight_summary_rb(aggregated_data)
 end
 
 # Main processing logic callable from main or tests
-def process_and_print_flights_rb(data_input, is_html_input: true)
+def process_and_print_flights_rb(data_input, target_state, is_html_input: true) # Added target_state
   parsed_flights = parse_flight_data(data_input, is_html_input: is_html_input)
 
   if parsed_flights.nil? || parsed_flights.empty?
@@ -106,19 +111,20 @@ def process_and_print_flights_rb(data_input, is_html_input: true)
     return
   end
 
-  florida_flights = filter_florida_flights_rb(parsed_flights)
+  # This function will be renamed and modified in the next step.
+  state_specific_flights = filter_flights_by_state_rb(parsed_flights, target_state) # Call renamed function
 
-  if florida_flights.empty?
-    puts "No flights to Florida found."
+  if state_specific_flights.empty?
+    puts "No flights to #{target_state} found." # Use target_state in message
     if parsed_flights.length > 0
-       puts "Parsed #{parsed_flights.length} flights total, but none were for Florida."
+       puts "Parsed #{parsed_flights.length} flights total, but none were for #{target_state}."
     end
     return
   end
 
-  aggregated_data = aggregate_flight_data_rb(florida_flights)
+  aggregated_data = aggregate_flight_data_rb(state_specific_flights) # No change here
   
-  output_string = format_flight_summary_rb(aggregated_data)
+  output_string = format_flight_summary_rb(aggregated_data, target_state) # Pass target_state
   if output_string
     puts output_string
   else
@@ -128,11 +134,25 @@ end
 
 # Main script execution part
 def main
+  # Determine target state from ARGV or default to "FL"
+  target_state = "FL"
+  if ARGV.length > 0
+    potential_state = ARGV[0].strip.upcase
+    if potential_state.length == 2 && potential_state.match?(/^[A-Z]{2}$/)
+      target_state = potential_state
+    else
+      puts "Warning: Invalid state abbreviation '#{ARGV[0]}'. Must be 2 letters. Using default 'FL'."
+      # target_state remains "FL"
+    end
+  end
+  puts "Processing flights for state: #{target_state}"
+
   url = "https://tracker.flightview.com/FVAccess3/tools/fids/fidsDefault.asp?accCustId=PANYNJ&fidsId=20001&fidsInit=departures&fidsApt=EWR"
   html_content = fetch_flight_data(url)
 
   if html_content
-    process_and_print_flights_rb(html_content, is_html_input: true)
+    # Pass target_state to the processing function
+    process_and_print_flights_rb(html_content, target_state, is_html_input: true)
   else
     puts "Failed to fetch flight data."
   end
