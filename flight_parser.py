@@ -46,17 +46,17 @@ def parse_flight_data(flight_data_input, is_html_input=True):
                  print("This could be due to the HTML text structure not matching the 10-line assumption.")
     return flights
 
-def filter_florida_flights(parsed_flights):
-    """Filters for flights heading to Florida."""
+def filter_flights_by_state(parsed_flights, target_state): # Renamed and added target_state
+    """Filters for flights heading to the specified state."""
     return [
         flight for flight in parsed_flights
-        if flight['destination'].endswith(", FL")
+        if flight['destination'].endswith(f", {target_state}") # Use target_state
     ]
 
-def aggregate_flight_data(florida_flights):
+def aggregate_flight_data(state_specific_flights): # Parameter name changed for clarity
     """Aggregates flight data by destination and status."""
     aggregated_data = {}
-    for flight in florida_flights:
+    for flight in state_specific_flights: # Use new parameter name
         destination = flight['destination']
         status = flight['status']
         if destination not in aggregated_data:
@@ -64,12 +64,12 @@ def aggregate_flight_data(florida_flights):
         aggregated_data[destination][status] = aggregated_data[destination].get(status, 0) + 1
     return aggregated_data
 
-def format_flight_summary(aggregated_data):
-    """Formats the aggregated flight data into a printable string summary."""
+def format_flight_summary(aggregated_data, target_state): # Added target_state
+    """Formats the aggregated flight data into a printable string summary for the target state."""
     if not aggregated_data:
         return None
         
-    output_lines = ["Florida Flight Status Summary:", "------------------------------"]
+    output_lines = [f"{target_state} Flight Status Summary:", "------------------------------"] # Use target_state
     for city, statuses in sorted(aggregated_data.items()):
         status_parts = []
         for status, count in sorted(statuses.items()):
@@ -78,42 +78,58 @@ def format_flight_summary(aggregated_data):
     output_lines.append("------------------------------")
     return "\n".join(output_lines)
 
-def process_and_print_flights(flight_data_html_or_text, is_html_input_flag=True): # Renamed for clarity
+def process_and_print_flights(flight_data_html_or_text, target_state, is_html_input_flag=True): # Added target_state
     """
-    Processes flight data (from HTML or pre-processed text) and prints the summary.
+    Processes flight data (from HTML or pre-processed text) and prints the summary for the target_state.
     Set is_html_input_flag=False if flight_data_html_or_text is already processed text lines.
     """
-    # The parameter for parse_flight_data is 'is_html_input'
-    # The parameter for this function is 'is_html_input_flag'
     parsed_flights = parse_flight_data(flight_data_html_or_text, is_html_input=is_html_input_flag)
 
     if not parsed_flights:
         print("No flights parsed or an error occurred during parsing.")
         return
 
-    florida_flights = filter_florida_flights(parsed_flights)
+    state_specific_flights = filter_flights_by_state(parsed_flights, target_state) # Use renamed function
 
-    if not florida_flights:
-        print("No flights to Florida found.")
-        if parsed_flights: # Check if parsed_flights itself is not None or empty
-            print(f"Found {len(parsed_flights)} flights total, but none for Florida.")
+    if not state_specific_flights:
+        print(f"No flights to {target_state} found.") # Use target_state in message
+        if parsed_flights: 
+            print(f"Found {len(parsed_flights)} flights total, but none were for {target_state}.")
         return
 
-    aggregated_data = aggregate_flight_data(florida_flights)
+    aggregated_data = aggregate_flight_data(state_specific_flights) # Pass filtered flights
     
-    output_string = format_flight_summary(aggregated_data)
+    output_string = format_flight_summary(aggregated_data, target_state) # Pass target_state
     if output_string:
         print(output_string)
     else:
         print("No data to display after filtering and aggregation.")
 
+import argparse # Import argparse
+
 def main():
     """Main function to orchestrate the flight data processing."""
+    parser = argparse.ArgumentParser(description="Fetch and parse flight data for a specific state.")
+    parser.add_argument(
+        "--state", 
+        type=str, 
+        default="FL", 
+        help="Target state abbreviation (e.g., FL, CA). Default is FL."
+    )
+    args = parser.parse_args()
+    
+    target_state = args.state.upper() # Convert to uppercase
+    if not (len(target_state) == 2 and target_state.isalpha()):
+        print(f"Warning: Invalid state abbreviation '{args.state}'. Must be 2 letters. Using default 'FL'.")
+        target_state = "FL"
+        
+    print(f"Processing flights for state: {target_state}")
+
     url = "https://tracker.flightview.com/FVAccess3/tools/fids/fidsDefault.asp?accCustId=PANYNJ&fidsId=20001&fidsInit=departures&fidsApt=EWR"
     flight_data_html = fetch_flight_data(url)
 
     if flight_data_html:
-        process_and_print_flights(flight_data_html, is_html_input_flag=True) # Call with HTML input
+        process_and_print_flights(flight_data_html, target_state, is_html_input_flag=True) # Pass target_state
     else:
         print("Failed to fetch flight data.")
 
