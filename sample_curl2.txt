@@ -1,0 +1,16 @@
+curl 'https://pcmiler.alk.com/APIs/REST/v1.0/service.svc/route/routePath?dataset=Current' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  -H 'authorization: token=dqlyate87c756745hvm7mzztugkhr2gg' \
+  -H 'content-type: application/json' \
+  -H 'origin: https://pcmilerweb.trimblemaps.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://pcmilerweb.trimblemaps.com/' \
+  -H 'sec-ch-ua: "Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36' \
+  --data-raw $'{"Route":{"RouteId":"1","Stops":[{"Coords":{"Lat":"40.323605","Lon":"-104.980339"}},{"Coords":{"Lat":"40.246357","Lon":"-104.975851"},"Address":{"StreetAddress":"4194 Route 36","City":"Platteville","State":"CO","Zip":"80651","County":"","Country":"US"},"Costs":{"CostOfStop":0,"HoursPerStop":0,"Loaded":true,"OnDuty":true,"UseOrigin":false},"PlaceId":"1xoXPsMAQsu0aoqLNE7BQNIg"}],"ExtendedOptions":{"UseTraffic":false},"Options":{"VehicleType":0,"RoutingType":0,"HubRouting":false,"TollDiscourage":false,"TollRoads":3,"AFSetIDs":[],"BordersOpen":true,"HighwayOnly":false,"HazMatType":0,"DistanceUnits":0,"TruckCfg":{"LCV":false,"Units":0,"Height":"13\'6\\"","Length":"48\'0\\"","Width":"96\\"","Weight":80000,"Axles":5,"MaxWeightPerAxleGroup":34000},"FerryDiscourage":false,"SideOfStreetAdherence":0,"UseAvoidsAndFavors":false,"UseSites":true,"IncludeTrimblePlaceIDs":true,"ClassOverrides":0}}}'
