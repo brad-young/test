@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="https://maps-sdk.trimblemaps.com/v4/trimblemaps-4.2.2.css" />
+        <script src="https://maps-sdk.trimblemaps.com/v4/trimblemaps-4.2.2.js"></script>
+        <style>
+            body { margin: 0; padding: 0; }
+
+            #map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+
+        <script>
+            // Add a route to map.
+            TrimbleMaps.setAPIKey('sample');
+            const map = new TrimbleMaps.Map({
+                container: 'map',
+                style: TrimbleMaps.Common.Style.TRANSPORTATION,
+                center: new TrimbleMaps.LngLat(-74.566234, 40.49944),
+                zoom: 8
+            });
+            const myRoute = new TrimbleMaps.Route({
+                routeId: 'myRoute',
+                stops: [
+                    new TrimbleMaps.LngLat(-74.566234, 40.49944),
+                    new TrimbleMaps.LngLat(-74.528512, 40.386680),
+                    new TrimbleMaps.LngLat(-74.629749, 40.26118)
+                ],
+                showStops: false
+            });
+
+            map.on('load', function() {
+                myRoute.addTo(map);
+            });
+        </script>
+    </body>
+</html>
