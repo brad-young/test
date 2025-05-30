@@ -1,0 +1,8 @@
+curl 'https://pcmiler.alk.com/APIs/REST/v1.0/service.svc/route/routePath?stops=-104.974608%2C40.247991%3B-104.867234%2C40.329796&vehType=0&routeType=0&hwyOnly=false&overrideClass=3&distUnits=0&avoidTolls=false&openBorders=true&overrideRestrict=false&hazMat=0&hubRouting=false&vehDimUnits=0&vehHeight=13%276%22&vehLength=56%270%22&vehWidth=102%22&vehWeight=80000&axles=3&LCV=false&dataset=Current&ferryDiscourage=false&sideOfStreetAdherence=0&useSites=false&includeplids=true' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'Authorization: 1D6B42C5799EA143B45FC1320533ADFE|dqlyate87c756745hvm7mzztugkhr2gg|2013-01-24T06:02:03.004Z' \
+  -H 'Referer: https://contenttools.alk.com/' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: "Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?0'
