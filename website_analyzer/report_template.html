@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Analysis Report for {{ URL }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        h1, h2 { color: #333; }
+        h1 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .metric { margin-bottom: 15px; padding: 10px; border: 1px solid #eee; border-radius: 4px; }
+        .metric-label { font-weight: bold; color: #555; }
+        .error { color: red; font-weight: bold; }
+        .success { color: green; }
+        .dead-link-url { word-break: break-all; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f9f9f9; }
+        ul { padding-left: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Website Analysis Report</h1>
+        <div class="metric">
+            <span class="metric-label">Analyzed URL:</span> <a href="{{ URL }}" target="_blank">{{ URL }}</a>
+        </div>
+
+        {% if ERROR_MESSAGE %}
+        <div class="metric error">
+            <span class="metric-label">Error during analysis:</span> {{ ERROR_MESSAGE }}
+        </div>
+        {% else %}
+        <div class="metric">
+            <span class="metric-label">Page Load Time:</span>
+            {% if LOAD_TIME is not none %}
+                {{ "%.2f seconds" | format(LOAD_TIME) }}
+            {% else %}
+                N/A
+            {% endif %}
+        </div>
+
+        <div class="metric">
+            <span class="metric-label">HTTP Status Code:</span>
+            {% if STATUS_CODE %}
+                {{ STATUS_CODE }}
+            {% else %}
+                N/A
+            {% endif %}
+        </div>
+
+        <h2>SEO Metrics</h2>
+        <div class="metric">
+            <span class="metric-label">Title:</span> {{ SEO_TITLE if SEO_TITLE else "Not found" }}
+        </div>
+        <div class="metric">
+            <span class="metric-label">Meta Description:</span> {{ SEO_META_DESCRIPTION if SEO_META_DESCRIPTION else "Not found" }}
+        </div>
+        <div class="metric">
+            <span class="metric-label">Headings (H1-H6):</span>
+            {% if SEO_HEADINGS %}
+                <ul>
+                    {% for heading in SEO_HEADINGS %}
+                    <li><strong>&lt;{{ heading.tag }}&gt;:</strong> {{ heading.text }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No headings found or error in extraction.</p>
+            {% endif %}
+        </div>
+
+        <h2>Link Analysis</h2>
+        <div class="metric">
+            <span class="metric-label">Dead Links:</span>
+            {% if DEAD_LINKS %}
+                <p>{{ DEAD_LINKS | length }} dead or problematic links found:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Status Code</th>
+                            <th>Error (if any)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for link in DEAD_LINKS %}
+                        <tr>
+                            <td class="dead-link-url"><a href="{{ link.url }}" target="_blank">{{ link.url }}</a></td>
+                            <td>{{ link.status_code if link.status_code else "N/A" }}</td>
+                            <td>{{ link.error if link.error else "N/A" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="success">No dead links found.</p>
+            {% endif %}
+        </div>
+
+        <h2>JavaScript Errors</h2>
+        <div class="metric">
+            <span class="metric-label">Console Errors:</span>
+            {% if JAVASCRIPT_ERRORS %}
+                <p>{{ JAVASCRIPT_ERRORS | length }} JavaScript errors found (details not captured in this version).</p>
+                {# Basic display, can be enhanced if actual errors are captured #}
+            {% else %}
+                <p>No JavaScript errors reported (Note: Full JS error capture requires a headless browser and is not implemented in this version).</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
