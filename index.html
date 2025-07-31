@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Tester</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-webhook"></i> Webhook Tester</h1>
+            <p>Test your webhooks with this simple endpoint</p>
+        </header>
+
+        <main class="main-content">
+            <div class="webhook-info">
+                <div class="info-card">
+                    <h3><i class="fas fa-link"></i> Your Webhook URL</h3>
+                    <div class="url-display">
+                        <input type="text" id="webhookUrl" readonly>
+                        <button id="copyBtn" class="copy-btn">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <p class="url-note">Use this URL as your webhook endpoint</p>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> How to Use</h3>
+                    <ul>
+                        <li>Copy the webhook URL above</li>
+                        <li>Send POST requests to this URL</li>
+                        <li>Messages will appear below in real-time</li>
+                        <li>All request data is captured and displayed</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="messages-section">
+                <div class="messages-header">
+                    <h3><i class="fas fa-envelope"></i> Received Messages</h3>
+                    <div class="controls">
+                        <button id="clearBtn" class="clear-btn">
+                            <i class="fas fa-trash"></i> Clear All
+                        </button>
+                        <button id="autoScrollBtn" class="auto-scroll-btn active">
+                            <i class="fas fa-arrow-down"></i> Auto-scroll
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <div class="no-messages">
+                        <i class="fas fa-inbox"></i>
+                        <p>No messages received yet</p>
+                        <p>Send a POST request to your webhook URL to see messages here</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Webhook Tester - Simple endpoint for testing webhooks</p>
+            <p>Hosted on GitHub Pages</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
